@@ -8,6 +8,15 @@ import com.trainly.app.trainlyapp.DAO.UserDAO;
 public class CreateUser {
     private UserDAO userDAO = new UserDAO();
 
+    public boolean registerUser(String username, String password, String email, String userType) {
+        User user = new User(username, password, email, userType);
+        return userDAO.saveUser(user);
+    }
+    
+    // Método para autenticar al usuario
+    public boolean authenticate(String email, String password) {
+        User user = userDAO.loginUser(email, password);
+        return user != null;
 
 
         if (userType.equalsIgnoreCase("client")) {

@@ -3,6 +3,7 @@ package com.trainly.app.trainlyapp.services;
 import org.springframework.stereotype.Service;
 
 import com.trainly.app.trainlyapp.DAO.UserDAO;
+import com.trainly.app.trainlyapp.services.User;
 
 @Service
 public class CreateUser {
@@ -18,8 +19,8 @@ public class CreateUser {
         User user = userDAO.loginUser(email, password);
         return user != null;
 
-
-        if (userType.equalsIgnoreCase("client")) {
+ /* 
+        if (user.equalsIgnoreCase("client")) {
             factory = new CreateClientFactory();
         } else if (userType.equalsIgnoreCase("trainer")) {
             factory = new CreateTrainerFactory();
@@ -32,6 +33,6 @@ public class CreateUser {
         user.setPassword(password);
         user.setEmail(email);
 
-        return userDAO.registerUser(user);
+        return userDAO.registerUser(user);*/
     }
 }

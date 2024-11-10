@@ -9,8 +9,10 @@ public class Login {
         this.userDAO = userDAO;
     }
 
-    public boolean loginUser(String username, String password) {
-        return userDAO.loginUser(username, password);
+    
+    public User loginUser(String email, String password) {
+        User user = userDAO.loginUser(email, password);
+        return user ; // Devuelve true si el usuario existe, false en caso contrario
     }
 }
 

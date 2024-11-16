@@ -1,24 +1,34 @@
-package com.trainly.app.trainlyapp.services;
+package com.trainly.app.trainlyapp.models;
 
-public abstract class User {
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "users")
+public class UserEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String username;
     private String password;
     private String email;
-    private String userType;  // Nuevo campo para el tipo de usuario
+    private String userType;
 
-    // Constructor vacío
-    public User() {}
+    public UserEntity() {}
 
-    // Constructor completo
-    public User(String username, String password, String email, String userType) {
+    public UserEntity(String username, String password, String email, String userType) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.userType = userType;
     }
 
-    // Getters y Setters
+    // Getters y setters
     public int getId() {
         return id;
     }
@@ -59,6 +69,8 @@ public abstract class User {
         this.userType = userType;
     }
 
-    // Métodos abstractos (si es necesario)
-    public abstract void displayInfo(); // Ejemplo de método abstracto que debe ser implementado por las subclases
+    // Método displayInfo
+    public void displayInfo() {
+        System.out.println("UserEntity: " + getUsername() + ", " + getEmail());
+    }
 }

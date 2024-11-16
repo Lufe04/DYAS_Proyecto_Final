@@ -1,5 +1,6 @@
 {
     "sqltools.connections": [
+
         {
             "mysqlOptions": {
                 "authProtocol": "default",
@@ -12,7 +13,8 @@
             "name": "Trainly",
             "group": "trainly",
             "database": "Trainly",
-            "username": "root"
+            "username": "root",
+            "password": "#Shann0nJuegaVol"
         },
         {
             "mysqlOptions": {

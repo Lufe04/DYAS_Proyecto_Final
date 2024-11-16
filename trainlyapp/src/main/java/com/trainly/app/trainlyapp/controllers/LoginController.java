@@ -1,7 +1,7 @@
 package com.trainly.app.trainlyapp.controllers;
 
+import com.trainly.app.trainlyapp.models.UserEntity;
 import com.trainly.app.trainlyapp.services.Login;
-import com.trainly.app.trainlyapp.services.User;
 
 public class LoginController {
     private final Login login;
@@ -11,7 +11,7 @@ public class LoginController {
     }
 
     public String login(String email, String password) {
-        User user = login.loginUser(email, password);
+        UserEntity user = login.loginUser(email, password);
         if (user != null) {
             // Usuario autenticado correctamente
             return "redirect:/dashboard";

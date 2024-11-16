@@ -1,81 +1,106 @@
 package com.trainly.app.trainlyapp;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
+import org.mockito.Mock;
+import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.trainly.app.trainlyapp.controllers.UserController;
-import com.trainly.app.trainlyapp.services.User;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
-
-import com.trainly.app.trainlyapp.TrainlyappApplication;
-
-
+import com.trainly.app.trainlyapp.DAO.UserDAO;
+import com.trainly.app.trainlyapp.models.UserEntity;
+import com.trainly.app.trainlyapp.services.UserFactory;
 
 @SpringBootTest
 class TrainlyappApplicationTests {
 
-    @Autowired
-    private UserController userController;
-    
-	@Test
-	void contextLoads() {
-	}
+    @Mock
+    private UserDAO userDAO;
 
-	/*public static void main(String[] args) {
-        // Inicializa el contexto de Spring Boot
-        ApplicationContext context = SpringApplication.run(TrainlyappApplication.class, args);
+    @Mock
+    private UserFactory userFactory;
 
-        // Obtén el bean UserController del contexto
-        UserController userController = context.getBean(UserController.class);
-
-        // Crea un objeto User
-        User user = new User();
-        user.setUsername("Daniela");
-        user.setPassword("12345");
-        user.setEmail("daniela@ejemplo.com");
-        user.setUserType("client");
-
-        // Realiza el registro del usuario
-        var response = userController.registerUser(user);
-        System.out.println(response.getBody());
-
-    
-     
-    }*/
-
-    public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(TrainlyappApplication.class, args);
-        UserController userController = context.getBean(UserController.class);
-
-        // Prueba de inicio de sesión con credenciales válidas
-        testLogin(userController, "daniela@ejemplo.com", "12345");
-
-        // Prueba de inicio de sesión con credenciales inválidas
-        testLogin(userController, "invalidUser ", "wrongPassword");
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
-    private static void testLogin(UserController userController, String email, String password) {
-        // Crea un objeto User
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(password);
+    @Test
+    public void testRegisterUserSuccess() {
+        // Datos de prueba
+        String username = "martin";
+        String password = "12345";
+        String email = "martin@example.com";
+        String userType = "CLIENT";
 
-        // Realiza el inicio de sesión
-        ResponseEntity<String> response = userController.loginUser (user);
+        // Simular creación de usuario con la fábrica
+        UserEntity mockUser = new UserEntity(username, password, email, userType);
+        when(userFactory.createUser(username, password, email, userType)).thenReturn(mockUser);
 
-        // Imprime el resultado de la prueba
-        if (response.getStatusCode() == HttpStatus.OK) {
-            System.out.println("Login successful for user: " + email);
-        } else {
-            System.out.println("Login failed for user: " + email + " - " + response.getBody());
-        }
+        // Simular guardado exitoso en el DAO
+        when(userDAO.saveUser(mockUser)).thenReturn(true);
+
+        // Ejecutar el registro
+        boolean isRegistered = userDAO.saveUser(mockUser);
+
+        // Verificar resultado
+        assertTrue(isRegistered, "El usuario debería haberse registrado exitosamente");
+    }
+
+    @Test
+    public void testRegisterUserFailure() {
+        // Datos de prueba
+        String username = "martin";
+        String password = "12345";
+        String email = "martin@example.com";
+        String userType = "TRAINER";
+
+        // Simular creación de usuario con la fábrica
+        UserEntity mockUser = new UserEntity(username, password, email, userType);
+        when(userFactory.createUser(username, password, email, userType)).thenReturn(mockUser);
+
+        // Simular fallo al guardar en el DAO
+        when(userDAO.saveUser(mockUser)).thenReturn(false);
+
+        // Ejecutar el registro
+        boolean isRegistered = userDAO.saveUser(mockUser);
+
+        // Verificar resultado
+        assertFalse(isRegistered, "El usuario no debería haberse registrado");
+    }
+
+    @Test
+    public void testAuthenticateUserSuccess() {
+        // Datos de prueba
+        String email = "martin@example.com";
+        String password = "12345";
+
+        // Simular un usuario existente
+        UserEntity mockUser = new UserEntity("martin", password, email, "CLIENT");
+        when(userDAO.loginUser(email, password)).thenReturn(mockUser);
+
+        // Ejecutar la autenticación
+        UserEntity authenticatedUser = userDAO.loginUser(email, password);
+
+        // Verificar resultado
+        assertTrue(authenticatedUser != null, "El usuario debería haber iniciado sesión correctamente");
+    }
+
+    @Test
+    public void testAuthenticateUserFailure() {
+        // Datos de prueba
+        String email = "noexiste@example.com";
+        String password = "wrongpassword";
+
+        // Simular que el usuario no existe
+        when(userDAO.loginUser(email, password)).thenReturn(null);
+
+        // Ejecutar la autenticación
+        UserEntity authenticatedUser = userDAO.loginUser(email, password);
+
+        // Verificar resultado
+        assertFalse(authenticatedUser != null, "El usuario no debería haber iniciado sesión");
     }
 }

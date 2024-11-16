@@ -10,14 +10,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DatabaseConfig {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/trainly"; // Cambia 'trainly' por el nombre de tu base de datos
-    private static final String USER = "root"; // Cambia por tu usuario de MySQL
-    private static final String PASSWORD = "12345"; // Cambia por tu contraseña de MySQL
+    private static final String URL = "jdbc:mysql://localhost:3306/trainly?useSSL=false&serverTimezone=UTC";
+    private static final String USER = "root";
+    private static final String PASSWORD = "12345";
 
     @Bean
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+        try {
+            Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            System.out.println("Conexión exitosa!");
+            return connection;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("Error al conectar a la base de datos", e);
+        }
     }
 }
-
-

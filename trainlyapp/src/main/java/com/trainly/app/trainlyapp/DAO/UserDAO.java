@@ -1,12 +1,15 @@
 package com.trainly.app.trainlyapp.DAO;
 
-import com.trainly.app.trainlyapp.services.User;
-import com.trainly.app.trainlyapp.config.DatabaseConfig;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import com.trainly.app.trainlyapp.config.DatabaseConfig;
+import com.trainly.app.trainlyapp.models.UserEntity;
 
 @Repository
 public class UserDAO {
@@ -14,8 +17,15 @@ public class UserDAO {
     @Autowired
     private DatabaseConfig databaseConfig;
 
-    // Guardar usuario en la base de datos
-    public boolean saveUser(User user) {
+    // Guardar usuario (cliente o entrenador) en la base de datos
+    public boolean saveUser(UserEntity user) {
+        System.out.println("Intentando guardar usuario: " + user.getUsername());
+        
+        if (!(user.getUserType().equalsIgnoreCase("TRAINER") || user.getUserType().equalsIgnoreCase("CLIENT"))) {
+            System.out.println("Tipo de usuario inválido: " + user.getUserType());
+            return false;
+        }
+
         String query = "INSERT INTO users (username, password, email, user_type) VALUES (?, ?, ?, ?)";
         try (Connection connection = databaseConfig.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -23,46 +33,45 @@ public class UserDAO {
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getEmail());
             statement.setString(4, user.getUserType());
-            return statement.executeUpdate() > 0;
+            int result = statement.executeUpdate();
+            if (result > 0) {
+                System.out.println("Usuario guardado exitosamente");
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("Error al guardar el usuario: " + e.getMessage());
         }
         return false;
     }
-     // Método para autenticación de usuarios (login)
-public User loginUser(String email, String password) {
-    // Modificar la consulta para buscar por email en lugar de username
-    String query = "SELECT * FROM users WHERE email = ? AND password = ?";
-    
-    try (Connection connection = databaseConfig.getConnection();
-         PreparedStatement statement = connection.prepareStatement(query)) {
-        
-        // Establecer los valores del email y la contraseña
-        statement.setString(1, email);
-        statement.setString(2, password);
-        
-        // Ejecutar la consulta
-        ResultSet rs = statement.executeQuery();
-        
-        // Si hay un resultado, crear y devolver el objeto User
-        if (rs.next()) {
-            return new User(
-                rs.getString("username"),
-                rs.getString("password"),
-                rs.getString("email"),
-                rs.getString("user_type")
-            );
+
+    // Método para autenticación de usuario (cliente o entrenador)
+    public UserEntity loginUser(String email, String password) {
+        String query = "SELECT * FROM users WHERE email = ? AND password = ?";
+        try (Connection connection = databaseConfig.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, email);
+            statement.setString(2, password);
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                // Obtenemos los datos del usuario desde la base de datos
+                String username = rs.getString("username");
+                String userType = rs.getString("user_type");
+
+                // Creamos y devolvemos un objeto UserEntity
+                return new UserEntity(
+                    username,
+                    rs.getString("password"),
+                    rs.getString("email"),
+                    userType
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error al autenticar usuario: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        // Si no se encuentra el usuario, devolvemos null
+        return null;
     }
-    
-    // Si no se encuentra el usuario, devolver null
-    return null;
 }
-}
-
-
-    
-
-

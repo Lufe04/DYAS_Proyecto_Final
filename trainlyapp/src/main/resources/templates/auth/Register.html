@@ -38,6 +38,10 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+        .role-selection {
+            text-align: left;
+            margin: 10px 0;
+        }
         button {
             background: #28a745;
             color: white;
@@ -65,12 +69,21 @@
 
 <div class="register-container">
     <h2>Registrarse</h2>
-    <form action="#" method="POST">
+    <form action="/register" method="POST">
         <input type="text" placeholder="Nombre Completo" required>
         <input type="email" placeholder="Correo Electrónico" required>
         <input type="password" placeholder="Contraseña" required>
         <input type="number" placeholder="Peso (kg)" required>
         <textarea placeholder="Metas y Objetivos" rows="4" required></textarea>
+        
+        <div class="role-selection">
+            <label>Tipo de usuario:</label><br>
+            <input type="radio" id="CLIENT" name="user_type" value="CLIENT" required>
+            <label for="CLIENT">Cliente</label><br>
+            <input type="radio" id="TRAINER" name="user_type" value="TRAINER" required>
+            <label for="TRAINER">Entrenador</label>
+        </div>
+
         <button type="submit">Registrarse</button>
     </form>
     <a href="/login" class="login-link">¿Ya tienes una cuenta? Inicia Sesión aquí</a>

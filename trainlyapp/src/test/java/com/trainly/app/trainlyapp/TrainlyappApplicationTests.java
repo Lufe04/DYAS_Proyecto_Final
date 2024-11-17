@@ -2,105 +2,124 @@ package com.trainly.app.trainlyapp;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 
 import com.trainly.app.trainlyapp.DAO.UserDAO;
-import com.trainly.app.trainlyapp.models.UserEntity;
-import com.trainly.app.trainlyapp.services.UserFactory;
+import com.trainly.app.trainlyapp.config.DatabaseConfig;
+import com.trainly.app.trainlyapp.controllers.UserController;
+import com.trainly.app.trainlyapp.services.User;
+
 
 @SpringBootTest
 class TrainlyappApplicationTests {
+    @Autowired
+    private UserController userController;
+    
+	@Test
+	void contextLoads() {
+	}
 
-    @Mock
+    private Connection connection;
     private UserDAO userDAO;
 
-    @Mock
-    private UserFactory userFactory;
-
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
+    public void setUp() throws SQLException {
+        // Obtener una nueva conexión a la base de datos
+        connection = DatabaseConfig.getConnection();
+        userDAO = new UserDAO(connection);
     }
 
     @Test
-    public void testRegisterUserSuccess() {
-        // Datos de prueba
-        String username = "martin";
-        String password = "12345";
-        String email = "martin@example.com";
-        String userType = "CLIENT";
+    public void testSaveUser() {
+        // Crear un objeto User con los datos del nuevo usuario
+        User newUser = new User("newuser@example.com", "Nuevo Usuario", "password123", "basic");
 
-        // Simular creación de usuario con la fábrica
-        UserEntity mockUser = new UserEntity(username, password, email, userType);
-        when(userFactory.createUser(username, password, email, userType)).thenReturn(mockUser);
+        // Llamar al método para guardar el usuario
+        boolean isSaved = userDAO.saveUser(newUser);
 
-        // Simular guardado exitoso en el DAO
-        when(userDAO.saveUser(mockUser)).thenReturn(true);
+        // Verificar que el usuario se insertó correctamente
+        assertTrue(isSaved, "El usuario no fue agregado correctamente.");
 
-        // Ejecutar el registro
-        boolean isRegistered = userDAO.saveUser(mockUser);
-
-        // Verificar resultado
-        assertTrue(isRegistered, "El usuario debería haberse registrado exitosamente");
+        // Verificar que el usuario existe en la base de datos
+        boolean userExists = userDAO.isUserExist(newUser.getEmail());
+        assertTrue(userExists, "El usuario no fue encontrado en la base de datos.");
     }
 
-    @Test
-    public void testRegisterUserFailure() {
-        // Datos de prueba
-        String username = "martin";
-        String password = "12345";
-        String email = "martin@example.com";
-        String userType = "TRAINER";
+    // Método para limpiar los datos después de cada prueba
+    @AfterEach
+    public void cleanUp() throws SQLException {
+        String email = "newuser@example.com"; // El email que usamos para agregar el usuario
 
-        // Simular creación de usuario con la fábrica
-        UserEntity mockUser = new UserEntity(username, password, email, userType);
-        when(userFactory.createUser(username, password, email, userType)).thenReturn(mockUser);
-
-        // Simular fallo al guardar en el DAO
-        when(userDAO.saveUser(mockUser)).thenReturn(false);
-
-        // Ejecutar el registro
-        boolean isRegistered = userDAO.saveUser(mockUser);
-
-        // Verificar resultado
-        assertFalse(isRegistered, "El usuario no debería haberse registrado");
+        // Eliminar el usuario después de la prueba
+        String deleteQuery = "DELETE FROM users WHERE email = ?";
+        try (PreparedStatement ps = connection.prepareStatement(deleteQuery)) {
+            ps.setString(1, email);
+            ps.executeUpdate();
+        }
     }
 
-    @Test
-    public void testAuthenticateUserSuccess() {
-        // Datos de prueba
-        String email = "martin@example.com";
-        String password = "12345";
+	public static void main(String[] args) {
+        // Inicializa el contexto de Spring Boot
+        ApplicationContext context = SpringApplication.run(TrainlyappApplication.class, args);
 
-        // Simular un usuario existente
-        UserEntity mockUser = new UserEntity("martin", password, email, "CLIENT");
-        when(userDAO.loginUser(email, password)).thenReturn(mockUser);
+        // Obtén el bean UserController del contexto
+        UserController userController = context.getBean(UserController.class);
 
-        // Ejecutar la autenticación
-        UserEntity authenticatedUser = userDAO.loginUser(email, password);
+        // Crea un objeto User
+        User user = new User();
+        user.setUsername("Juan");
+        user.setPassword("12345");
+        user.setEmail("juan@ejemplo.com");
+        user.setUserType("client");
 
-        // Verificar resultado
-        assertTrue(authenticatedUser != null, "El usuario debería haber iniciado sesión correctamente");
+        // Realiza el registro del usuario
+        var response = userController.registerUser(user);
+        System.out.println(response.getBody());
+
+    
+     
     }
 
-    @Test
-    public void testAuthenticateUserFailure() {
-        // Datos de prueba
-        String email = "noexiste@example.com";
-        String password = "wrongpassword";
+    /*public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(TrainlyappApplication.class, args);
+        UserController userController = context.getBean(UserController.class);
 
-        // Simular que el usuario no existe
-        when(userDAO.loginUser(email, password)).thenReturn(null);
+        // Prueba de inicio de sesión con credenciales válidas
+        testLogin(userController, "daniela@ejemplo.com", "12345");
 
-        // Ejecutar la autenticación
-        UserEntity authenticatedUser = userDAO.loginUser(email, password);
-
-        // Verificar resultado
-        assertFalse(authenticatedUser != null, "El usuario no debería haber iniciado sesión");
+        // Prueba de inicio de sesión con credenciales inválidas
+        testLogin(userController, "invalidUser ", "wrongPassword");
     }
+
+    private static void testLogin(UserController userController, String email, String password) {
+        // Crea un objeto User
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
+
+        // Realiza el inicio de sesión
+        ResponseEntity<String> response = userController.loginUser (user);
+
+        // Imprime el resultado de la prueba
+        if (response.getStatusCode() == HttpStatus.OK) {
+            System.out.println("Login successful for user: " + email);
+        } else {
+            System.out.println("Login failed for user: " + email + " - " + response.getBody());
+        }
+    }*/
 }

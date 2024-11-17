@@ -3,40 +3,37 @@ package com.trainly.app.trainlyapp.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import com.trainly.app.trainlyapp.DAO.UserDAO;
-import com.trainly.app.trainlyapp.models.UserEntity;
-import com.trainly.app.trainlyapp.services.UserFactory;
+import com.trainly.app.trainlyapp.services.CreateUser;
+import com.trainly.app.trainlyapp.services.User;
 
-@Controller
+@RestController
+@RequestMapping("/api")
 public class UserController {
 
     @Autowired
-    private UserFactory userFactory;
+    private CreateUser userService;
 
-    @Autowired
-    private UserDAO userDAO;
-
+    // Endpoint para el registro de usuarios
     @PostMapping("/register")
-    public String registerUser(@RequestParam String username, @RequestParam String email,
-                               @RequestParam String password, @RequestParam String userType) {
-        UserEntity user = userFactory.createUser(username, password, email, userType);
-        if (userDAO.saveUser(user)) {
-            return "redirect:/login"; // Redirigir a la página de login si el registro fue exitoso
+    public ResponseEntity<String> registerUser(@RequestBody User user) {
+        boolean isRegistered = userService.registerUser(user.getUsername(), user.getPassword(), user.getEmail(), user.getUserType());
+        if (isRegistered) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("Usuario registrado con éxito");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al registrar el usuario");
         }
-        return "error"; // Redirigir a una página de error en caso de fallo
     }
 
+    // Endpoint para iniciar sesión
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestParam String email, @RequestParam String password) {
-        UserEntity user = userDAO.loginUser(email, password); // Usamos el método correcto del DAO
-        if (user != null) {
-            return ResponseEntity.ok(user);
+    public ResponseEntity<String> loginUser(@RequestBody User user) {
+        boolean isAuthenticated = userService.authenticate(user.getEmail(), user.getPassword());
+        if (isAuthenticated) {
+            return ResponseEntity.ok("Inicio de sesión exitoso");
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales incorrectas");
         }
     }
 }

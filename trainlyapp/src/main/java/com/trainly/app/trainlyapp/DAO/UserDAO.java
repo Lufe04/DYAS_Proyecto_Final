@@ -1,77 +1,108 @@
 package com.trainly.app.trainlyapp.DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import com.trainly.app.trainlyapp.services.User;
+import com.trainly.app.trainlyapp.config.DatabaseConfig;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.trainly.app.trainlyapp.config.DatabaseConfig;
-import com.trainly.app.trainlyapp.models.UserEntity;
+import java.sql.*;
 
 @Repository
 public class UserDAO {
 
     @Autowired
     private DatabaseConfig databaseConfig;
-
-    // Guardar usuario (cliente o entrenador) en la base de datos
-    public boolean saveUser(UserEntity user) {
-        System.out.println("Intentando guardar usuario: " + user.getUsername());
-        
-        if (!(user.getUserType().equalsIgnoreCase("TRAINER") || user.getUserType().equalsIgnoreCase("CLIENT"))) {
-            System.out.println("Tipo de usuario inválido: " + user.getUserType());
-            return false;
-        }
-
+    private Connection connection;
+    // Constructor que recibe una conexión a la base de datos
+    public UserDAO(Connection connection) {
+        this.connection = connection;
+    }
+    // Guardar usuario en la base de datos
+    public boolean saveUser(User user) {
         String query = "INSERT INTO users (username, password, email, user_type) VALUES (?, ?, ?, ?)";
-        try (Connection connection = databaseConfig.getConnection();
+        try (Connection connection = DatabaseConfig.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getEmail());
             statement.setString(4, user.getUserType());
-            int result = statement.executeUpdate();
-            if (result > 0) {
-                System.out.println("Usuario guardado exitosamente");
-                return true;
-            }
+            return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error al guardar el usuario: " + e.getMessage());
         }
         return false;
     }
-
-    // Método para autenticación de usuario (cliente o entrenador)
-    public UserEntity loginUser(String email, String password) {
-        String query = "SELECT * FROM users WHERE email = ? AND password = ?";
-        try (Connection connection = databaseConfig.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, email);
-            statement.setString(2, password);
-            ResultSet rs = statement.executeQuery();
-
-            if (rs.next()) {
-                // Obtenemos los datos del usuario desde la base de datos
-                String username = rs.getString("username");
-                String userType = rs.getString("user_type");
-
-                // Creamos y devolvemos un objeto UserEntity
-                return new UserEntity(
-                    username,
-                    rs.getString("password"),
-                    rs.getString("email"),
-                    userType
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Error al autenticar usuario: " + e.getMessage());
+     // Método para autenticación de usuarios (login)
+public User loginUser(String email, String password) {
+    // Modificar la consulta para buscar por email en lugar de username
+    String query = "SELECT * FROM users WHERE email = ? AND password = ?";
+    
+    try (Connection connection = DatabaseConfig.getConnection();
+         PreparedStatement statement = connection.prepareStatement(query)) {
+        
+        // Establecer los valores del email y la contraseña
+        statement.setString(1, email);
+        statement.setString(2, password);
+        
+        // Ejecutar la consulta
+        ResultSet rs = statement.executeQuery();
+        
+        // Si hay un resultado, crear y devolver el objeto User
+        if (rs.next()) {
+            return new User(
+                rs.getString("username"),
+                rs.getString("password"),
+                rs.getString("email"),
+                rs.getString("user_type")
+            );
         }
-        // Si no se encuentra el usuario, devolvemos null
-        return null;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    
+    // Si no se encuentra el usuario, devolver null
+    return null;
+}
+
+// Método para obtener un usuario por su email
+public User getUserByEmail(String email) {
+    String query = "SELECT * FROM users WHERE email = ?";
+    try (Connection connection = DatabaseConfig.getConnection();
+    PreparedStatement statement = connection.prepareStatement(query)) {
+        statement.setString(1, email);
+        ResultSet rs = statement.executeQuery();
+        if (rs.next()) {
+            // Crear un objeto User y mapear los datos de la base de datos
+            User user = new User();
+            user.setId(rs.getInt("id"));
+            user.setUsername(rs.getString("username"));
+            user.setEmail(rs.getString("email"));
+            user.setUserType(rs.getString("user_type"));
+            // Asignar otros campos si es necesario
+            return user;
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;  // Retorna null si no se encuentra el usuario
+}
+
+// Método para verificar si el usuario existe en la BD por su email
+public boolean isUserExist(String email) {
+    String query = "SELECT * FROM users WHERE email = ?";
+    try (PreparedStatement ps = connection.prepareStatement(query)) {
+        ps.setString(1, email);
+        var rs = ps.executeQuery();
+        return rs.next(); // Si hay resultados, el usuario existe
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
     }
 }
+}
+
+
+    
+
+

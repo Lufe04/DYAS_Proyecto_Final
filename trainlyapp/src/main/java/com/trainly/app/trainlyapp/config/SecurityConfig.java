@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -15,7 +14,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/", "/index.html", "/login", "/auth/Login.html", "/register", "/auth/Register.html", "/user/TrainningPlanView.html").permitAll() // Permitir acceso público a estas rutas
+                .requestMatchers("/", "/index.html", "/login", "/auth/Login.html", "/register", "/auth/Register.html").permitAll() // Permitir acceso público a estas rutas
                 .anyRequest().authenticated() // Cualquier otra solicitud requiere autenticación
             )
             .formLogin(form -> form
@@ -27,10 +26,5 @@ public class SecurityConfig {
             );
 
         return http.build();
-    }
-
-     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }

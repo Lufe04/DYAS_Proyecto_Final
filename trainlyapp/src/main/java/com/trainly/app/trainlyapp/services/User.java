@@ -1,7 +1,5 @@
 package com.trainly.app.trainlyapp.services;
 
-import com.trainly.app.trainlyapp.services.Observer;
-
 public class User implements Observer {
     private int id;
     private String username;

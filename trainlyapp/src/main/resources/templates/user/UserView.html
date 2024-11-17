@@ -1,0 +1,64 @@
+<body>
+    <div class="container">
+        <h1>User Profile</h1>
+        <div class="profile">
+            <p><strong>Username:</strong> <span id="username"></span></p>
+            <p><strong>Full Name:</strong> <span id="fullName"></span></p>
+            <p><strong>User Type:</strong> <span id="userType"></span></p>
+        </div>
+        <div class="training-section">
+            <h2>Training Plans</h2>
+            <table id="trainingPlans">
+                <tr>
+                    <th>Plan Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                </tr>
+            </table>
+
+            <h2>Training Trackers</h2>
+            <table id="trainingTrackers">
+                <tr>
+                    <th>Plan ID</th>
+                    <th>Progress</th>
+                    <th>Date</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const apiUrl = "/profiles/current";
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(profileData => {
+                // Poblar datos del perfil
+                document.getElementById("username").textContent = profileData.username;
+                document.getElementById("fullName").textContent = profileData.fullName;
+                document.getElementById("userType").textContent = profileData.userType;
+
+                // Poblar planes de entrenamiento
+                const plansTable = document.getElementById("trainingPlans");
+                profileData.trainingPlans.forEach(plan => {
+                    const row = plansTable.insertRow();
+                    row.insertCell(0).textContent = plan.planName;
+                    row.insertCell(1).textContent = plan.startDate;
+                    row.insertCell(2).textContent = plan.endDate;
+                });
+
+                // Poblar rastreadores de entrenamiento
+                const trackersTable = document.getElementById("trainingTrackers");
+                profileData.trainingTrackers.forEach(tracker => {
+                    const row = trackersTable.insertRow();
+                    row.insertCell(0).textContent = tracker.trainingPlanId;
+                    row.insertCell(1).textContent = tracker.progress;
+                    row.insertCell(2).textContent = tracker.date;
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching profile data:", error);
+                alert("Failed to load profile data.");
+            });
+    </script>
+</body>

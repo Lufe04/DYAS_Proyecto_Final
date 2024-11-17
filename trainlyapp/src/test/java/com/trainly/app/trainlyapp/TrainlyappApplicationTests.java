@@ -1,19 +1,13 @@
 package com.trainly.app.trainlyapp;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import static org.mockito.Mockito.when;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,13 +35,13 @@ class TrainlyappApplicationTests {
     public void setUp() throws SQLException {
         // Obtener una nueva conexión a la base de datos
         connection = DatabaseConfig.getConnection();
-        userDAO = new UserDAO(connection);
+        userDAO = new UserDAO();
     }
 
     @Test
     public void testSaveUser() {
         // Crear un objeto User con los datos del nuevo usuario
-        User newUser = new User("newuser@example.com", "Nuevo Usuario", "password123", "basic");
+        User newUser = new User("User", "password123 ", "user@gmail.com", "CLIENT");
 
         // Llamar al método para guardar el usuario
         boolean isSaved = userDAO.saveUser(newUser);
@@ -62,6 +56,7 @@ class TrainlyappApplicationTests {
 
     // Método para limpiar los datos después de cada prueba
     @AfterEach
+    @Test
     public void cleanUp() throws SQLException {
         String email = "newuser@example.com"; // El email que usamos para agregar el usuario
 
@@ -72,7 +67,7 @@ class TrainlyappApplicationTests {
             ps.executeUpdate();
         }
     }
-
+    @Test
 	public static void main(String[] args) {
         // Inicializa el contexto de Spring Boot
         ApplicationContext context = SpringApplication.run(TrainlyappApplication.class, args);
@@ -94,32 +89,6 @@ class TrainlyappApplicationTests {
     
      
     }
-
-    /*public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(TrainlyappApplication.class, args);
-        UserController userController = context.getBean(UserController.class);
-
-        // Prueba de inicio de sesión con credenciales válidas
-        testLogin(userController, "daniela@ejemplo.com", "12345");
-
-        // Prueba de inicio de sesión con credenciales inválidas
-        testLogin(userController, "invalidUser ", "wrongPassword");
-    }
-
-    private static void testLogin(UserController userController, String email, String password) {
-        // Crea un objeto User
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(password);
-
-        // Realiza el inicio de sesión
-        ResponseEntity<String> response = userController.loginUser (user);
-
-        // Imprime el resultado de la prueba
-        if (response.getStatusCode() == HttpStatus.OK) {
-            System.out.println("Login successful for user: " + email);
-        } else {
-            System.out.println("Login failed for user: " + email + " - " + response.getBody());
-        }
-    }*/
+   
+   
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Aplicación de Deporte</title>
+    <title>Realizar Pagos</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
@@ -42,9 +42,24 @@
             margin-left: 10px;
             font-weight: bold;
         }
+        .hero {
+            background: url('https://source.unsplash.com/1600x900/?sports') no-repeat center center/cover;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        .hero h1 {
+            font-size: 3em;
+        }
         .content {
             padding: 20px;
             text-align: center;
+        }
+        .content h2 {
+            margin-bottom: 20px;
         }
         .card {
             background: white;
@@ -73,42 +88,36 @@
     </style>
 </head>
 <body>
-
 <header>
-    <h1>Bienvenido a tu Dashboard</h1>
+    <h1>Realizar Pagos</h1>
     <nav>
-        <a href="#profile">Perfil</a>
-        <a href="#training-plans">Planes de Entrenamiento</a>
-        <a href="#notifications">Notificaciones</a>
-        <a href="#payment">Pagos</a>
+        <a href="/dashboard.html">Inicio</a>
+        <a href="/profile.html">Perfil</a>
+        <a href="/plans.html">Planes</a>
     </nav>
     <div class="buttons">
-        <a href="/logout" class="logout">Cerrar Sesión</a>
+        <a href="/logout">Cerrar Sesión</a>
     </div>
 </header>
-
 <div class="content">
-    <h2>Tu Panel de Control</h2>
+    <h2>Detalles de Pago</h2>
     <div class="card">
-        <h3>Perfil</h3>
-        <p>Administra tu información personal y preferencias.</p>
-        <a href="/profile">Ir a Perfil</a>
+        <h3>Plan Seleccionado</h3>
+        <p>Plan Avanzado</p>
+        <p>Precio: $100</p>
     </div>
-    <div class="card">
-        <h3>Planes de Entrenamiento</h3>
-        <p>Accede a tus planes de entrenamiento personalizados.</p>
-        <a href="/training-plans">Ver Planes</a>
-    </div>
-    <div class="card">
-        <h3>Notificaciones</h3>
-        <p>Revisa tus notificaciones y recordatorios.</p>
-        <a href="/notifications">Ver Notificaciones</a>
-    </div>
+    <form>
+        <label for="cardNumber">Número de Tarjeta:</label><br>
+        <input type="text" id="cardNumber" name="cardNumber" required><br>
+        <label for="expiryDate">Fecha de Expiración:</label><br>
+        <input type="month" id="expiryDate" name="expiryDate" required><br>
+        <label for="cvv">CVV:</label><br>
+        <input type="text" id="cvv" name="cvv" required><br>
+        <button type="submit">Pagar</button>
+    </form>
 </div>
-
 <footer>
     <p>&copy; 2023 Aplicación de Deporte. Todos los derechos reservados.</p>
 </footer>
-
 </body>
 </html>

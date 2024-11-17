@@ -17,17 +17,18 @@ public class SecurityConfig {
                 .ignoringRequestMatchers("/api/register", "/api/login") // Excluir estos endpoints de la protección CSRF
             )
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/", "/index.html", "/login", "/auth/Login.html", "/register", "/auth/Register.html", "/dashboard", "/perfil").permitAll() // Permitir acceso público a estas rutas
+                .requestMatchers("/", "/index.html", "/login", "/auth/Login.html", "/register", "/auth/Register.html", "/dashboard", "/perfil", "/user-view", "/training-plan-view", "/notification-view", "/payment-view").permitAll() // Permitir acceso público a estas rutas
                 .requestMatchers("/api/register", "/api/login").permitAll() // Permitir acceso a los endpoints de registro y login
-                .requestMatchers("/dashboard.html").authenticated() // Asegúrate de que el dashboard requiera autenticación
+                .requestMatchers("/dashboard.html", "/user-view", "/training-plan-view", "/notification-view", "/payment-view").authenticated()
                 .anyRequest().authenticated() // Cualquier otra solicitud requiere autenticación
             )
             .formLogin(form -> form
                 .loginPage("/login") // Especificar la página de inicio de sesión
                 .defaultSuccessUrl("/dashboard.html", true) // Redirigir a dashboard.html después de iniciar sesión
-                .permitAll() // Permitir que todos los usuarios accedan a la página de inicio de sesión
+                .permitAll() // Permitir acceso público a la página de inicio de sesión
             )
             .logout(logout -> logout
+                .logoutSuccessUrl("/login") // Redirigir a la página de inicio de sesión tras cerrar sesión
                 .permitAll() // Permitir que todos los usuarios cierren sesión
             );
 

@@ -3,21 +3,40 @@ package com.trainly.app.trainlyapp.services;
 import org.springframework.stereotype.Service;
 
 import com.trainly.app.trainlyapp.DAO.UserDAO;
+<<<<<<< Updated upstream
 
 @Service
 public class Login {
+=======
+import com.trainly.app.trainlyapp.services.User;
+import org.springframework.stereotype.Service;
+
+import java.sql.Connection;
+
+@Service
+public class Login implements ILoginService {
+>>>>>>> Stashed changes
     private final UserDAO userDAO;
 
-    public Login(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    // Constructor que recibe una conexión para inicializar UserDAO
+    public Login(Connection connection) {
+        this.userDAO = new UserDAO(connection);
     }
 
-    
-    public User loginUser(String email, String password) {
+    // Método de autenticación que implementa la interfaz
+    @Override
+    public User login(String email, String password) {
+        // Consultar la base de datos para autenticar al usuario
         User user = userDAO.loginUser(email, password);
-        return user ; // Devuelve true si el usuario existe, false en caso contrario
+        if (user != null) {
+            System.out.println("Usuario autenticado: " + user.getEmail());
+        } else {
+            System.out.println("Usuario no encontrado o credenciales incorrectas.");
+        }
+        return user;
     }
 }
+
 
 
 

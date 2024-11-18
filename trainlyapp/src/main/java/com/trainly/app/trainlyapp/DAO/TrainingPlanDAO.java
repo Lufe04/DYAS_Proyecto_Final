@@ -5,15 +5,51 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.trainly.app.trainlyapp.services.TrainningPlan;
 import com.trainly.app.trainlyapp.services.User;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+import java.sql.*;
+
+@Repository
 public class TrainingPlanDAO {
 
-    private Connection connection;
+    private final Connection connection;
+
 
     // Constructor que acepta una conexión
     public TrainingPlanDAO(Connection connection) {
         this.connection = connection;
+    }
+ 
+    
+     // Método para obtener el plan de entrenamiento por el correo del usuario
+    public TrainningPlan getTrainingPlanByUserEmail(String email) throws SQLException {
+        // Consulta SQL para obtener el plan de entrenamiento por el correo del usuario
+        String sql = "SELECT t.id, t.plan_name, t.start_date, t.end_date " +
+                     "FROM training_plans t " +
+                     "JOIN users u ON t.user_id = u.id " +
+                     "WHERE u.email = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, email); // Establecer el parámetro del correo en la consulta
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    // Mapeo del resultado a un objeto TrainingPlan
+                    return new TrainningPlan(
+                        rs.getInt("id"),
+                        rs.getString("plan_name"),
+                        rs.getDate("start_date"),
+                        rs.getDate("end_date")
+                    );
+                } else {
+                    // Si no se encuentra el plan, devuelve null
+                    return null;
+                }
+            }
+        }
     }
 
     public boolean assignTrainingPlanToUser(String email, String planName, String startDate, String endDate) {
@@ -93,5 +129,6 @@ public class TrainingPlanDAO {
             e.printStackTrace();
             return false;
         }
+    }   
 }
-}
+

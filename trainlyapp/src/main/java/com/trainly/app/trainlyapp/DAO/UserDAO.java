@@ -17,6 +17,14 @@ public class UserDAO {
     @Autowired
     private DatabaseConfig databaseConfig;
 
+
+    private Connection connection;
+
+    public UserDAO(Connection connection) {
+        this.connection = connection;
+    }
+
+
     // Guardar usuario en la base de datos
     public boolean saveUser (User user) {
         String query = "INSERT INTO users (username, password, email, user_type) VALUES (?, ?, ?, ?)";

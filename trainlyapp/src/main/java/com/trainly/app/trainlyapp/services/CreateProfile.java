@@ -1,6 +1,7 @@
 package com.trainly.app.trainlyapp.services;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreateProfile {
@@ -18,6 +19,15 @@ public class CreateProfile {
         this.trainingPlans = trainingPlans;
         this.trainingTrackers = trainingTrackers;
     }
+
+    public CreateProfile(String username, String fullName, String userType) {
+    this.username = username;
+    this.fullName = fullName;
+    this.userType = userType;
+    this.trainingPlans = new ArrayList<>();
+    this.trainingTrackers = new ArrayList<>();
+}
+
 
     public String getUsername() {
         return username;

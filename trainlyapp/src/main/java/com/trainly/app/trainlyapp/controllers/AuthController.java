@@ -10,13 +10,9 @@ public class AuthController {
         return "index"; // Devuelve index.html
     }
 
-    @GetMapping("/login")
-    public String login() {
-        return "auth/Login"; // Devuelve auth/Login.html
-    }
-
     @GetMapping("/register")
     public String register() {
         return "auth/Register"; // Devuelve auth/Register.html
     }
+
 }

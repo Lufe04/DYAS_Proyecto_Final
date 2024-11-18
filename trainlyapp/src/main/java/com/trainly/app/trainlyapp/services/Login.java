@@ -1,8 +1,11 @@
 package com.trainly.app.trainlyapp.services;
 
+import org.springframework.stereotype.Service;
+
 import com.trainly.app.trainlyapp.DAO.UserDAO;
 <<<<<<< Updated upstream
 
+@Service
 public class Login {
 =======
 import com.trainly.app.trainlyapp.services.User;

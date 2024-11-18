@@ -1,15 +1,15 @@
 package com.trainly.app.trainlyapp.services;
 
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
 
 public class TrainningPlan {
-
     private int id;
     private String planName;
     private Date startDate;
     private Date endDate;
 
-    // Constructor
+    // Constructor con los parámetros (id, planName, startDate, endDate)
     public TrainningPlan(int id, String planName, Date startDate, Date endDate) {
         this.id = id;
         this.planName = planName;
@@ -49,6 +49,8 @@ public class TrainningPlan {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+
+
 
     @Override
     public String toString() {

@@ -18,7 +18,6 @@ import com.trainly.app.trainlyapp.config.DatabaseConfig;
 import com.trainly.app.trainlyapp.controllers.UserController;
 import com.trainly.app.trainlyapp.services.User;
 
-
 @SpringBootTest
 class TrainlyappApplicationTests {
     @Autowired
@@ -35,7 +34,7 @@ class TrainlyappApplicationTests {
     public void setUp() throws SQLException {
         // Obtener una nueva conexión a la base de datos
         connection = DatabaseConfig.getConnection();
-        userDAO = new UserDAO();
+        userDAO = new UserDAO(connection);
     }
 
     @Test

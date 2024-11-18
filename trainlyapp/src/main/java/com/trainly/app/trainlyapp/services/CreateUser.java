@@ -18,7 +18,8 @@ public class CreateUser  {
         User user = new User(username, password, email, userType);
         return userDAO.saveUser (user);
     }
-
+    
+    
     // Método para autenticar al usuario
     public boolean authenticate(String email, String password) {
         User user = userDAO.loginUser (email, password);

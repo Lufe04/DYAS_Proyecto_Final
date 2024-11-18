@@ -51,7 +51,7 @@ public class TrainingPlanDAO {
             }
         }
     }
-
+    
     public boolean assignTrainingPlanToUser(String email, String planName, String startDate, String endDate) {
         // Paso 1: Obtener el user_id del usuario con el email dado
         int userId = getUserIdByEmail(email);

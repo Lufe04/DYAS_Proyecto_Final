@@ -3,19 +3,13 @@ package com.trainly.app.trainlyapp.services;
 import org.springframework.stereotype.Service;
 
 import com.trainly.app.trainlyapp.DAO.UserDAO;
-<<<<<<< Updated upstream
 
-@Service
-public class Login {
-=======
 import com.trainly.app.trainlyapp.services.User;
 import org.springframework.stereotype.Service;
-
 import java.sql.Connection;
 
 @Service
 public class Login implements ILoginService {
->>>>>>> Stashed changes
     private final UserDAO userDAO;
 
     // Constructor que recibe una conexión para inicializar UserDAO
@@ -36,6 +30,7 @@ public class Login implements ILoginService {
         return user;
     }
 }
+
 
 
 

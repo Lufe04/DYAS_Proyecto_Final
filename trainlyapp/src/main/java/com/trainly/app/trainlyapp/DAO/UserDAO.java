@@ -19,12 +19,12 @@ public class UserDAO {
 
 
     private Connection connection;
-
+    // Constructor que recibe una conexión a la base de datos
     public UserDAO(Connection connection) {
         this.connection = connection;
     }
 
-
+    
     // Guardar usuario en la base de datos
     public boolean saveUser (User user) {
         String query = "INSERT INTO users (username, password, email, user_type) VALUES (?, ?, ?, ?)";

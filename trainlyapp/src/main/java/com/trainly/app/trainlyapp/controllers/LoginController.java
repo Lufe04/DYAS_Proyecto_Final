@@ -1,7 +1,5 @@
 package com.trainly.app.trainlyapp.controllers;
 
-<<<<<<< Updated upstream
-=======
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,34 +9,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.trainly.app.trainlyapp.services.ILoginService;
 import com.trainly.app.trainlyapp.services.LoginProxy;
->>>>>>> Stashed changes
 import com.trainly.app.trainlyapp.services.Login;
 import com.trainly.app.trainlyapp.services.User;
 import com.trainly.app.trainlyapp.config.DatabaseConfig;
-
 import java.sql.Connection;
 
 public class LoginController {
-<<<<<<< Updated upstream
-    private final Login login;
-
-    public LoginController(Login login) {
-        this.login = login;
-    }
-
-    public String login(String email, String password) {
-        User user = login.loginUser(email, password);
-        if (user != null) {
-            // Usuario autenticado correctamente
-            return "redirect:/dashboard";
-        } else {
-            // Credenciales inválidas
-            return "Invalid username or password";
-        }
-    }
     
-}
-=======
     private final ILoginService loginService;
 
     @Autowired
@@ -70,4 +47,3 @@ public class LoginController {
     }
 }
 
->>>>>>> Stashed changes

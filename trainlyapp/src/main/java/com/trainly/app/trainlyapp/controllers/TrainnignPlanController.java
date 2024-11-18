@@ -51,3 +51,4 @@ public class TrainnignPlanController{
         return "plans/AssignPlan";
     }
 }
+

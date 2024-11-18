@@ -24,7 +24,6 @@ import com.trainly.app.trainlyapp.config.DatabaseConfig;
 import com.trainly.app.trainlyapp.controllers.UserController;
 import com.trainly.app.trainlyapp.services.User;
 
-
 @SpringBootTest
 class TrainlyappApplicationTests {
     @Autowired

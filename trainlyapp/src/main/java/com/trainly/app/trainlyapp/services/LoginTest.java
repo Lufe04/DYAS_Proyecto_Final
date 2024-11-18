@@ -6,7 +6,6 @@ import com.trainly.app.trainlyapp.services.User;
 import com.trainly.app.trainlyapp.services.Login;
 
 import java.sql.Connection;
-
 public class LoginTest {
     public static void main(String[] args) throws Exception {
         Connection connection = DatabaseConfig.getConnection();

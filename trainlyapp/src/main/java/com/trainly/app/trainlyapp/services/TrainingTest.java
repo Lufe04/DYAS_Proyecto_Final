@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class TrainingTest {
-
     public static void main(String[] args) {
         try {
             // Paso 1: Conectar a la base de datos

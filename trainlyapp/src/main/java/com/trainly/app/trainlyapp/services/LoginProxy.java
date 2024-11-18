@@ -1,7 +1,6 @@
 package com.trainly.app.trainlyapp.services;
 
 import com.trainly.app.trainlyapp.services.User;
-
 import java.util.HashMap;
 import java.util.Map;
 

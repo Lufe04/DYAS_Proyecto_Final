@@ -12,6 +12,7 @@ import com.trainly.app.trainlyapp.config.DatabaseConfig;
 @EntityScan(basePackages = "com.trainly.app.trainlyapp.models")
 public class TrainlyappApplication {
 
+    
 	public static void main(String[] args) {
 		SpringApplication.run(TrainlyappApplication.class, args);
 

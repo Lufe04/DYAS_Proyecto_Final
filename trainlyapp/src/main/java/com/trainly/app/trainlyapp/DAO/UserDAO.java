@@ -14,18 +14,11 @@ public class UserDAO {
     @Autowired
     private DatabaseConfig databaseConfig;
     private Connection connection;
-<<<<<<< Updated upstream
     // Constructor que recibe una conexión a la base de datos
     public UserDAO(Connection connection) {
         this.connection = connection;
     }
-=======
-
-    public UserDAO(Connection connection) {
-        this.connection = connection;
-    }
-
->>>>>>> Stashed changes
+    
     // Guardar usuario en la base de datos
     public boolean saveUser(User user) {
         String query = "INSERT INTO users (username, password, email, user_type) VALUES (?, ?, ?, ?)";

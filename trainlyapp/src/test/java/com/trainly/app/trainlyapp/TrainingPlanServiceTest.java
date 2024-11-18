@@ -1,6 +1,6 @@
 package com.trainly.app.trainlyapp;
 
-/* 
+
 import com.trainly.app.trainlyapp.DAO.UserDAO;
 import com.trainly.app.trainlyapp.DAO.TrainingPlanDAO;
 import com.trainly.app.trainlyapp.services.User;
@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 @SpringBootTest
+@Transactional
 public class TrainingPlanServiceTest {
 
     @Autowired
@@ -28,47 +29,40 @@ public class TrainingPlanServiceTest {
     private TrainingPlanDAO trainingPlanDAO;
 
     @Autowired
-    private Login loginService; // Suponiendo que tienes un servicio de login como el que has mencionado.
+    private Login loginService; // Inyectamos el servicio de Login
 
     private User testUser;
 
     @BeforeEach
     public void setUp() {
-        // Preparar datos antes de cada prueba
         testUser = new User("Test User", "testuser@example.com", "password123", "user");
         userDAO.saveUser(testUser); // Guardamos el usuario de prueba en la base de datos
     }
 
     @Test
     public void testAssignTrainingPlanToUser() throws SQLException {
-        // Simulamos el login del usuario
-        User loggedUser = Login.login("testuser@example.com", "password123");
+        // Usamos el servicio inyectado para hacer el login
+        User loggedUser = loginService.login("daniela@ejemplo.com", "12345");
         assertNotNull(loggedUser, "El usuario debe estar autenticado");
 
-        // Crear un plan de entrenamiento
         TrainningPlan plan = new TrainningPlan(
             1, 
             "Advanced Plan", 
-            Date.valueOf("2024-01-01"),  // Convierte la cadena a java.sql.Date
-            Date.valueOf("2024-03-31") 
-            );
-        // Asignar el plan al usuario por correo
-        boolean result = trainingPlanDAO.assignTrainingPlanToUser("testuser@example.com", "Advanced Plan", "2024-01-01", "2024-03-31");
+            Date.valueOf("2024-01-01"),  
+            Date.valueOf("2024-03-31")
+        );
 
-        // Verificar que la asignación fue exitosa
+        boolean result = trainingPlanDAO.assignTrainingPlanToUser("daniela@ejemplo.com", "Advanced Plan", "2024-01-01", "2024-03-31");
         assertTrue(result, "El plan debe haberse asignado correctamente");
-        
-        // Verificar si el plan de entrenamiento se ha guardado en la base de datos
+
         TrainningPlan assignedPlan = trainingPlanDAO.getTrainingPlanByUserEmail("daniela@ejemplo.com");
         assertNotNull(assignedPlan, "El plan de entrenamiento debe estar guardado en la base de datos");
-        assertEquals("Advanced Plan", assignedPlan.getPlanName(), "El nombre del plan debe ser 'Advanced Plan'");
+        assertEquals("Plan de Fuerza", assignedPlan.getPlanName(), "El nombre del plan debe ser 'Advanced Plan'");
     }
 
     @Test
     public void testInvalidLogin() {
-        // Intentar logear con credenciales incorrectas
-        User invalidUser = Login.login("invaliduser@example.com", "wrongpassword");
+        User invalidUser = loginService.login("invaliduser@example.com", "wrongpassword");
         assertNull(invalidUser, "El usuario no debería existir con estas credenciales");
     }
 }
-*/

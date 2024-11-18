@@ -1,13 +1,21 @@
 package com.trainly.app.trainlyapp.DAO;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
 import com.trainly.app.trainlyapp.services.CreateProfile;
 import com.trainly.app.trainlyapp.services.TrainningPlan;
 import com.trainly.app.trainlyapp.services.TrainningTracking;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
+@Repository
 public class ProfileDAO {
 
     private Connection connection;
@@ -86,9 +94,21 @@ public class ProfileDAO {
     }
 
     public CreateProfile getProfileByUserEmail(String email) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getProfileByUserEmail'");
+        String query = "SELECT username, email, user_type FROM users WHERE email = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String username = resultSet.getString("username");
+                String userType = resultSet.getString("user_type");
+                return new CreateProfile(username, email, userType);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // Usuario no encontrado
     }
+    
 }
 
 

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
 import com.trainly.app.trainlyapp.services.ILoginService;
 import com.trainly.app.trainlyapp.services.LoginProxy;
 import com.trainly.app.trainlyapp.services.Login;
@@ -14,6 +15,7 @@ import com.trainly.app.trainlyapp.services.User;
 import com.trainly.app.trainlyapp.config.DatabaseConfig;
 import java.sql.Connection;
 
+@Controller
 public class LoginController {
     
     private final ILoginService loginService;

@@ -1,6 +1,5 @@
 {
     "sqltools.connections": [
-
         {
             "mysqlOptions": {
                 "authProtocol": "default",
@@ -28,7 +27,8 @@
             "name": "Trainly",
             "group": "Prueba1",
             "database": "trainly",
-            "username": "root"
+            "username": "root",
+            "askForPassword": true
         }
     ],
     "java.compile.nullAnalysis.mode": "automatic",

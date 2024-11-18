@@ -12,7 +12,8 @@
             "name": "Trainly",
             "group": "trainly",
             "database": "Trainly",
-            "username": "root"
+            "username": "root",
+            "password": "#Shann0nJuegaVol"
         },
         {
             "mysqlOptions": {
@@ -26,7 +27,8 @@
             "name": "Trainly",
             "group": "Prueba1",
             "database": "trainly",
-            "username": "root"
+            "username": "root",
+            "askForPassword": true
         }
     ],
     "java.compile.nullAnalysis.mode": "automatic",

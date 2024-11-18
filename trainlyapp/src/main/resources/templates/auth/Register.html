@@ -38,6 +38,10 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+        .role-selection {
+            text-align: left;
+            margin: 10px 0;
+        }
         button {
             background: #28a745;
             color: white;
@@ -65,17 +69,56 @@
 
 <div class="register-container">
     <h2>Registrarse</h2>
-    <form action="#" method="POST">
-        <input type="text" placeholder="Nombre Completo" required>
-        <input type="email" placeholder="Correo Electrónico" required>
-        <input type="password" placeholder="Contraseña" required>
-        <input type="number" placeholder="Peso (kg)" required>
-        <textarea placeholder="Metas y Objetivos" rows="4" required></textarea>
+
+    <form id="registerForm">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        <input type="text" id="username" placeholder="Nombre Completo" required>
+        <input type="email" id="email" placeholder="Correo Electrónico" required>
+        <input type="password" id="password" placeholder="Contraseña" required>
+        <div class="role-selection">
+            <label>Tipo de usuario:</label><br>
+            <input type="radio" id="CLIENT" name="userType" value="CLIENT" required>
+            <label for="CLIENT">Cliente</label><br>
+            <input type="radio" id="TRAINER" name="userType" value="TRAINER" required>
+            <label for="TRAINER">Entrenador</label>
+        </div>
+
         <button type="submit">Registrarse</button>
     </form>
+
     <a href="/login" class="login-link">¿Ya tienes una cuenta? Inicia Sesión aquí</a>
     <a href="/index" class="login-link">Volver a Inicio</a>
 </div>
+
+<script>
+    document.getElementById('registerForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Evita el envío tradicional del formulario
+
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const userType = document.querySelector('input[name="userType"]:checked').value;
+
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, email, password, userType })
+        });
+
+        if (response.ok) {
+            const responseData = await response.json();
+            console.log('Registro exitoso:', responseData);
+            alert('Registro exitoso. Por favor, inicia sesión.');
+            window.location.href = '/login'; // Redirige a la página de inicio de sesión
+        } else {
+            const errorData = await response.json();
+            console.error('Error en el registro:', errorData);
+            alert('Error en el registro: ' + errorData.message);
+        }
+    });
+</script>
 
 </body>
 </html>

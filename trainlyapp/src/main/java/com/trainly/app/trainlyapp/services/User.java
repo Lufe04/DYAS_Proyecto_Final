@@ -1,12 +1,11 @@
 package com.trainly.app.trainlyapp.services;
 
-
-public abstract class User {
+public class User implements Observer {
     private int id;
     private String username;
     private String password;
     private String email;
-    private String userType;  // Nuevo campo para el tipo de usuario
+    private String userType;
 
     // Constructor vacío
     public User() {}
@@ -18,6 +17,24 @@ public abstract class User {
         this.email = email;
         this.userType = userType;
     }
+// Constructor que acepta solo email
+public User(String email) {
+    this.email = email;
+}
+    // Constructor con ID incluido
+    public User(int id, String username, String password, String email, String userType) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.userType = userType;
+    }
+
+    // Método del patrón Observer para recibir notificaciones
+    @Override
+    public void update(String message) {
+        System.out.println("Notificación para " + username + " (" + email + "): " + message);
+    }
 
     // Getters y Setters
     public int getId() {
@@ -27,7 +44,6 @@ public abstract class User {
     public void setId(int id) {
         this.id = id;
     }
-
     public String getUsername() {
         return username;
     }
@@ -59,4 +75,16 @@ public abstract class User {
     public void setUserType(String userType) {
         this.userType = userType;
     }
+
+    // Método para mostrar información del usuario
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", userType='" + userType + '\'' +
+                '}';
+    }
+    
 }

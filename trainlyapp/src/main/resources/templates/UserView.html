@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>User Profile</h1>
+        <div class="profile">
+            <p><strong>Username:</strong> <span th:text="${profile.username}"></span></p>
+            <p><strong>Full Name:</strong> <span th:text="${profile.fullName}"></span></p>
+            <p><strong>User Type:</strong> <span th:text="${profile.userType}"></span></p>
+        </div>
+        <div class="training-section">
+            <h2>Training Plans</h2>
+            <table>
+                <tr>
+                    <th>Plan Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                </tr>
+                <tr th:each="plan : ${profile.trainingPlans}">
+                    <td th:text="${plan.planName}"></td>
+                    <td th:text="${plan.startDate}"></td>
+                    <td th:text="${plan.endDate}"></td>
+                </tr>
+            </table>
+
+            <h2>Training Trackers</h2>
+            <table>
+                <tr>
+                    <th>Plan ID</th>
+                    <th>Progress</th>
+                    <th>Date</th>
+                </tr>
+                <tr th:each="tracker : ${profile.trainingTrackers}">
+                    <td th:text="${tracker.trainingPlanId}"></td>
+                    <td th:text="${tracker.progress}"></td>
+                    <td th:text="${tracker.date}"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

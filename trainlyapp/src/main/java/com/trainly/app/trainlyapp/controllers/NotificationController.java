@@ -1,15 +1,16 @@
 package com.trainly.app.trainlyapp.controllers;
 
 // ControladorNotificaciones.java
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class NotificationController {
     
-    @GetMapping("/api/notifications")
+    @GetMapping("/notification")
     public List<Notification> sendNotifications() {
         List<Notification> notifications = new ArrayList<>();
         

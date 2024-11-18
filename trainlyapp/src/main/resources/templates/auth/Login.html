@@ -62,14 +62,42 @@
 
 <div class="login-container">
     <h2>Iniciar Sesión</h2>
-    <form action="#" method="POST">
-        <input type="email" placeholder="Correo Electrónico" required>
-        <input type="password" placeholder="Contraseña" required>
+    <form id="loginForm">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        <input type="email" id="email" placeholder="Correo Electrónico" required>
+        <input type="password" id="password" placeholder="Contraseña" required>
         <button type="submit">Entrar</button>
     </form>
     <a href="/register" class="register-link">¿No tienes una cuenta? Regístrate aquí</a>
     <a href="/" class="register-link">Volver a Inicio</a>
 </div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Evita el envío tradicional del formulario
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        if (response.ok) {
+            const responseData = await response.json();
+            console.log('Inicio de sesión exitoso:', responseData);
+            window.location.href = '/dashboard';
+        } else {
+            const errorData = await response.json();
+            console.error('Error en el inicio de sesión:', errorData.message);
+            alert(errorData.message);
+        }
+    });
+</script>
 
 </body>
 </html>

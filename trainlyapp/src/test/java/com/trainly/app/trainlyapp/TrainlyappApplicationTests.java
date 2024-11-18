@@ -28,7 +28,6 @@ class TrainlyappApplicationTests {
 	}
 
     private Connection connection;
-    private UserDAO userDAO;
 
     @BeforeEach
     public void setUp() throws SQLException {
@@ -37,10 +36,13 @@ class TrainlyappApplicationTests {
         userDAO = new UserDAO(connection);
     }
 
+    @Autowired
+    private UserDAO userDAO;
+
     @Test
     public void testSaveUser() {
         // Crear un objeto User con los datos del nuevo usuario
-        User newUser = new User("User", "password123 ", "user@gmail.com", "CLIENT");
+        User newUser = new User("Usuario1", "12345", "user@gmail.com", "CLIENT");
 
         // Llamar al método para guardar el usuario
         boolean isSaved = userDAO.saveUser(newUser);

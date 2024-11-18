@@ -71,7 +71,7 @@ public class TrainingPlanDAO {
             statement.setString(4, endDate);
             
             int rowsAffected = statement.executeUpdate();
-            return rowsAffected > 0;
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }

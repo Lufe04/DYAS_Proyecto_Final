@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -20,7 +21,11 @@ public class SecurityConfig {
                 .requestMatchers("/", "/index.html", "/login", "/auth/Login.html", "/register", "/auth/Register.html", "/dashboard", "/perfil", "/user-view", "/training-plan-view", "/notification-view", "/payment-view").permitAll() // Permitir acceso público a estas rutas
                 .requestMatchers("/api/register", "/api/login").permitAll() // Permitir acceso a los endpoints de registro y login
                 .requestMatchers("/dashboard.html", "/user-view", "/training-plan-view", "/notification-view", "/payment-view").authenticated()
+                .requestMatchers("/profiles/current").authenticated()
                 .anyRequest().authenticated() // Cualquier otra solicitud requiere autenticación
+            )
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // Crear sesión solo si es necesario
             )
             .formLogin(form -> form
                 .loginPage("/login") // Especificar la página de inicio de sesión
@@ -28,7 +33,9 @@ public class SecurityConfig {
                 .permitAll() // Permitir acceso público a la página de inicio de sesión
             )
             .logout(logout -> logout
+                .logoutUrl("/logout")    
                 .logoutSuccessUrl("/login") // Redirigir a la página de inicio de sesión tras cerrar sesión
+                .deleteCookies("JSESSIONID")
                 .permitAll() // Permitir que todos los usuarios cierren sesión
             );
 

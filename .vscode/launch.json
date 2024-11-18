@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "TrainlyappApplicationTests",
+            "request": "launch",
+            "mainClass": "com.trainly.app.trainlyapp.TrainlyappApplicationTests",
+            "projectName": "trainlyapp"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-TrainlyappApplication<trainlyapp>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.trainly.app.trainlyapp.TrainlyappApplication",
+            "projectName": "trainlyapp",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

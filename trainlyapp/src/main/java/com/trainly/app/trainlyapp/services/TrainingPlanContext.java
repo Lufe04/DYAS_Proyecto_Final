@@ -1,7 +1,9 @@
 package com.trainly.app.trainlyapp.services;
 
-import com.trainly.app.trainlyapp.DAO.TrainingPlanDAO;
+import org.springframework.stereotype.Service;
 
+import com.trainly.app.trainlyapp.DAO.TrainingPlanDAO;
+@Service
 public class TrainingPlanContext {
     private TrainingPlanStrategy strategy;
     private final TrainingPlanDAO trainingPlanDAO;

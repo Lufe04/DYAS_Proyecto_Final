@@ -3,7 +3,6 @@ package com.trainly.app.trainlyapp.services;
 import com.trainly.app.trainlyapp.DAO.NotificationDAO;
 import com.trainly.app.trainlyapp.DAO.TrainingPlanDAO;
 import com.trainly.app.trainlyapp.config.DatabaseConfig;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 

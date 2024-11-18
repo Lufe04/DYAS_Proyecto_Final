@@ -27,7 +27,6 @@ public class LoginController {
         Login realService = new Login(connection);
         this.loginService = new LoginProxy(realService);
     }
-
     @GetMapping("/login")
     public String showLoginForm() {
         return "auth/Login"; // Devuelve la vista de inicio de sesión

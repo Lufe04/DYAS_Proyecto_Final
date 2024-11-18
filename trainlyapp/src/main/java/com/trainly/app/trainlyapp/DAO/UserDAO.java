@@ -23,6 +23,7 @@ public class UserDAO {
     public UserDAO(Connection connection) {
         this.connection = connection;
     }
+
     
     // Guardar usuario en la base de datos
     public boolean saveUser (User user) {

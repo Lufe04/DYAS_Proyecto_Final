@@ -9,6 +9,7 @@ public class TrainningPlan {
     private Date startDate;
     private Date endDate;
 
+
     
     // Constructor con los parámetros (id, planName, startDate, endDate)
     public TrainningPlan(int id, String planName, Date startDate, Date endDate) {

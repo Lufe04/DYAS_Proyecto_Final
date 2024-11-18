@@ -17,6 +17,7 @@ public class NotificationManager {
         this.notificationDAO = notificationDAO;
     }
 
+    
     // Método para asignar un plan y notificar al usuario
     public void assignTrainingPlanAndNotify(String email, String planName, String startDate, String endDate) {
         User user = trainingPlanDAO.getUserByEmail(email);

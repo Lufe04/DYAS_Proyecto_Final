@@ -34,7 +34,7 @@ class TrainlyappApplicationTests {
     public void setUp() throws SQLException {
         // Obtener una nueva conexión a la base de datos
         connection = DatabaseConfig.getConnection();
-        userDAO = new UserDAO();
+        userDAO = new UserDAO(connection);
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.trainly.app.trainlyapp.services.User;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class LoginProxy implements ILoginService {
     private ILoginService loginService;
     private Map<String, Integer> loginAttempts;

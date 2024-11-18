@@ -15,3 +15,4 @@ public class BeginnerPlan implements TrainingPlanStrategy {
 }
 
 
+

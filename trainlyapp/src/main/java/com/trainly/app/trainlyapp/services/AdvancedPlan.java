@@ -12,3 +12,4 @@ public class AdvancedPlan implements TrainingPlanStrategy {
 
 
 
+
